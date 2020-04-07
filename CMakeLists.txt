@@ -1,0 +1,23 @@
+PROJECT(main)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+
+FILE(GLOB SRC_LIST_CPP "${PROJECT_SOURCE_DIR}/src/*.cpp")
+FILE(GLOB SRC_LIST_C "${PROJECT_SOURCE_DIR}/src/*.c")
+
+MESSAGE(STATUS "src_list:" ${SRC_LIST_CPP} ${SRC_LIST_C})
+
+SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/build/lib)
+
+#指定生成动态库
+ADD_LIBRARY(ucom SHARED ${SRC_LIST_CPP} ${SRC_LIST_C})
+
+
+AUX_SOURCE_DIRECTORY(. DIR_SRCS)
+include_directories(include)
+include_directories(src)
+add_subdirectory(src)
+
+LINK_DIRECTORIES(${PROJECT_SOURCE_DIR}/build/lib)
+
+ADD_EXECUTABLE(main ${DIR_SRCS})
+TARGET_LINK_LIBRARIES( main ucom)
