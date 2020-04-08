@@ -3,7 +3,7 @@
 
 int CommuInit(void)
 {
-
+	g_msg_mmu.init();
 }
 
 int CommSetEventHandler(EVENT_HANDLER ev)

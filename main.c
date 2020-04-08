@@ -4,10 +4,40 @@
 //#include "list.h"
 #include "ucomlib.h"
 
+
 int handler(const int event,const int msgId)
 {
 
 }
+
+void ENTER_CRITICAL()
+{
+
+}
+
+
+void EXIT_CRITICAL()
+{
+
+}
+
+int CRITICAL_INIT()
+{
+
+}
+
+int CRITICAL_DEINIT()
+{
+
+}
+
+int OnTimeOut()
+{
+
+}
+
+
+
 
 int main()
 {

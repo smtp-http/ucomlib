@@ -4,9 +4,10 @@
 #include "ucomlib.h"
 
 typedef struct{
-	int (*save_msg)(int msgId,const char *msgData,unsigned int dataLen);
-	int (*get_msg)(int* pMsgId,char *msgData,unsigned int* pDataLen);
+	int (*save_msg)(const int msgId,const char *msgData,unsigned int dataLen);
+	int (*get_msg)(const int pMsgId,char *msgData,unsigned int* pDataLen);
 	int (*set_ev_handler)(EVENT_HANDLER ev);
+	int (*init)(void);
 	EVENT_HANDLER ev_handler;
 }msg_mmu_t;
 
