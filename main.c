@@ -7,7 +7,14 @@
 
 int handler(const int event,const int msgId)
 {
-
+	switch (event) {
+		case EV_TIMEOUT:
+			DEBUG("ev_timeout");
+			break;
+		default:
+			DEBUG("undefine event");
+			break;	
+	}
 }
 
 void ENTER_CRITICAL()
@@ -31,10 +38,6 @@ int CRITICAL_DEINIT()
 
 }
 
-int OnTimeOut()
-{
-
-}
 
 
 

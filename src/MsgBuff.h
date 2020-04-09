@@ -28,7 +28,7 @@ struct msg_ctrl_unit{
 	int msg_id;								// 0: idel msg ctrl unit      not 0: msg id
 	char data_len;								// data length: 0~255
 	char block_rationing[MAX_BLOCKNUM_PERMSG];  // the block number used
-	char timer_count;							// for timeout task
+	unsigned char timer_count;							// for timeout task
 } PACKED;
 
 typedef struct msg_ctrl_unit msg_ctrl_unit_t;
@@ -44,7 +44,7 @@ typedef struct msg_ctrl_unit msg_ctrl_unit_t;
 int msg_buff_init();
 int msg_buff_save(const int msgId,const char *msgData,unsigned int dataLen);
 int msg_buf_get(const int pMsgId,char *msgData,unsigned int* pDataLen);
-
+void mm_timing_processing(EVENT_HANDLER ev);
 
 
 #endif

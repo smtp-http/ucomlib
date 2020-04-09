@@ -7,6 +7,7 @@ typedef struct{
 	int (*save_msg)(const int msgId,const char *msgData,unsigned int dataLen);
 	int (*get_msg)(const int pMsgId,char *msgData,unsigned int* pDataLen);
 	int (*set_ev_handler)(EVENT_HANDLER ev);
+	void (*timing_processing)();
 	int (*init)(void);
 	EVENT_HANDLER ev_handler;
 }msg_mmu_t;

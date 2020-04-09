@@ -18,7 +18,7 @@ static inline int msg_check(int msg_id,unsigned int dataLen)
 		return ERR_DATA_EXCESSIVE;
 	}
 
-	for(i = 0;i < MAX_ASYNC_MSG_LEN;i ++) {
+	for(i = 0;i < MAX_ASYNC_MSG_NUM;i ++) {
 		if ( msg_ctrl_units[i].msg_id == msg_id) {
 			return ERR_ID_EXIST;
 		}
@@ -31,7 +31,7 @@ static inline msg_ctrl_unit_t* get_free_msg_unit(void)
 {
 	int i;
 
-	for(i = 0;i < MAX_ASYNC_MSG_LEN;i ++) {
+	for(i = 0;i < MAX_ASYNC_MSG_NUM;i ++) {
 		if(msg_ctrl_units[i].msg_id <= 0)
 			return &msg_ctrl_units[i];
 	}
@@ -43,7 +43,7 @@ static inline msg_ctrl_unit_t* get_msg_unit(int id)
 {
 	int i;
 
-	for(i = 0;i < MAX_ASYNC_MSG_LEN;i ++) {
+	for(i = 0;i < MAX_ASYNC_MSG_NUM;i ++) {
 		if(msg_ctrl_units[i].msg_id == id)
 			return &msg_ctrl_units[i];
 	}
@@ -128,6 +128,7 @@ int msg_buff_save(const int msgId,const char *msgData,unsigned int dataLen)
 	}
 
 	mu->msg_id = msgId;
+	mu->timer_count = 0;
 	
 	EXIT_CRITICAL();
 
@@ -172,6 +173,23 @@ int msg_buf_get(const int msgId,char *msgData,unsigned int* pDataLen)
 	EXIT_CRITICAL();
 	
 	return 0;
+}
+
+void mm_timing_processing(EVENT_HANDLER ev)
+{
+	unsigned int i;
+
+	for(i = 0;i < MAX_ASYNC_MSG_NUM ;i ++) {
+		if(msg_ctrl_units[i].msg_id != 0){
+			msg_ctrl_units[i].timer_count ++;
+			if(msg_ctrl_units[i].timer_count >= MAX_TIMEER_COUNT){
+				msg_ctrl_units[i].timer_count = 0;
+				ev(EV_TIMEOUT,msg_ctrl_units[i].msg_id);
+			}
+			
+		}
+	}
+
 }
 
 

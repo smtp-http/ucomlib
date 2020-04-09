@@ -10,6 +10,12 @@
 #define ERR_MSG_BUF_FULL   -14
 #define ERR_MSG_NOT_EXIST  -15
 
+
+/////////////////////////////// TIMER ////////////////////////////////
+#define MAX_TIMEER_COUNT  10
+//////////////////////////// event type //////////////////////////////
+#define EV_TIMEOUT          1
+
 /////////////////////////// user implementation //////////////////////
 typedef int (*EVENT_HANDLER)(const int event,const int msgId);
 
@@ -17,7 +23,6 @@ int CRITICAL_INIT();
 void ENTER_CRITICAL();
 void EXIT_CRITICAL();
 int CRITICAL_DEINIT();
-int OnTimeOut();
 
 
 
@@ -38,7 +43,7 @@ int OnTimeOut();
 ///////////////////////////// API ////////////////////////////////////
 int CommuInit(void);
 int CommSetEventHandler(EVENT_HANDLER ev);
-int OnTimer(int msec);
+int OnTimer();
 
 
 #endif

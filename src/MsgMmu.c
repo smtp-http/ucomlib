@@ -20,10 +20,16 @@ static int Init(void)
 	}
 }
 
+static void msg_timing_processing()
+{
+	mm_timing_processing(g_msg_mmu.ev_handler);
+}
+
 msg_mmu_t g_msg_mmu = {
 	.set_ev_handler = MsgMmuSetEvHandle,
 	.save_msg = msg_buff_save,
-	.get_msg = msg_buf_get
+	.get_msg = msg_buf_get,
+	.timing_processing = msg_timing_processing
 };
 
 
