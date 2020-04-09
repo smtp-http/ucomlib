@@ -26,6 +26,7 @@ static void msg_timing_processing()
 }
 
 msg_mmu_t g_msg_mmu = {
+	.init = Init,
 	.set_ev_handler = MsgMmuSetEvHandle,
 	.save_msg = msg_buff_save,
 	.get_msg = msg_buf_get,
