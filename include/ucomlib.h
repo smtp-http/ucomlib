@@ -43,6 +43,8 @@ int CRITICAL_DEINIT();
 ///////////////////////////// API ////////////////////////////////////
 int CommuInit(void);
 int CommSetEventHandler(EVENT_HANDLER ev);
+int CommSaveMsg(const int msgId,const char *msgData,unsigned int dataLen);
+int CommGetMsg(const int msgId,char *msgData,unsigned int* pDataLen);
 int OnTimer();
 
 
