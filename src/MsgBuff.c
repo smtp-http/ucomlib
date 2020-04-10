@@ -147,7 +147,7 @@ int msg_buff_save(const int msgId,const char *msgData,unsigned int dataLen)
 		for(j = 0;j < BLOCK_SIZE;j ++) {
 			if(i * BLOCK_SIZE + j >= dataLen)
 				break;
-			msg_buff[i][j] = msgData[i * BLOCK_SIZE + j];
+			msg_buff[mu->block_rationing[i]][j] = msgData[i * BLOCK_SIZE + j];
 		}
 	}
 
@@ -167,7 +167,7 @@ int msg_buf_get(const int msgId,char *msgData,unsigned int* pDataLen)
 
 	for(i = 0;i < count;i ++) {
 		for(j = 0;j < BLOCK_SIZE;j ++) {
-			msgData[i * BLOCK_SIZE + j] = msg_buff[i][j];
+			msgData[i * BLOCK_SIZE + j] = msg_buff[mu->block_rationing[i]][j];
 			if(i * BLOCK_SIZE + j >= mu->data_len)
 				break;
 		}
