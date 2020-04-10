@@ -9,11 +9,23 @@
 
 pthread_mutex_t g_mutex;
 
+int flag = 1;
 int handler(const int event,const int msgId)
 {
+	int ret,len;
+	char ms[100];
+	char *msg2 = "123456789123456789";
 	switch (event) {
 		case EV_TIMEOUT:
-			DEBUG("ev_timeout");
+			printf("ev_timeout\n");
+			if(flag){
+				ret = CommGetMsg(11,ms,&len);
+				ms[len+1]=0;
+				printf("get ret:%d  len:%d  m:%s\n",ret,len,ms);
+			} else {
+				printf("save ret:%d\n",CommSaveMsg(11,msg2,strlen(msg2)));
+			}
+			flag = !flag;
 			break;
 		default:
 			DEBUG("undefine event");
@@ -47,20 +59,27 @@ void *thread_timer(void* arg)
 {
 	printf("new thread,thread is :%u,pid:%d\n",pthread_self(),getpid());
 	while(1) {
-		sleep(1);
+		sleep(2);
 		OnTimer();
 		//pthread_exit(NULL);
 	}
 }
 
-char *msg1 = "hello hehe hehe hhe hs";
+char *msg1 = "12345678901234567";
+char *msg2 = "Time out,-edit!";
 void *thread_run1(void* arg)
 {
+	char ms[100];
+	int ret,len;
 	printf("new thread,thread is :%u,pid:%d\n",pthread_self(),getpid());
-	CommSaveMsg(11,msg1,strlen(msg1));
+	CommSaveMsg(11,msg2,strlen(msg2));
 	while(1) {
 		sleep(5);
-		printf("save ret:%d\n",CommSaveMsg(10,msg1,strlen(msg1)));
+		printf("len:%d  save ret:%d\n",strlen(msg1),CommSaveMsg(10,msg1,strlen(msg1)));
+		sleep(5);
+		ret = CommGetMsg(10,ms,&len);
+		ms[len+1]=0;
+		printf("get ret:%d  len:%d  ms:%s\n",ret,len,ms);
 	}
 }
 
@@ -90,7 +109,7 @@ int main()
 	pthread_t tid_timer,tid_run1,tid_run2;
 	pthread_create(&tid_timer,NULL,thread_timer,NULL);
 	pthread_create(&tid_run1,NULL,thread_run1,NULL);
-	pthread_create(&tid_run2,NULL,thread_run2,NULL);
+	//pthread_create(&tid_run2,NULL,thread_run2,NULL);
 
 	while(1){
 		sleep(10);

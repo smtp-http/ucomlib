@@ -20,4 +20,4 @@ add_subdirectory(src)
 LINK_DIRECTORIES(${PROJECT_SOURCE_DIR}/build/lib)
 
 ADD_EXECUTABLE(main ${DIR_SRCS})
-TARGET_LINK_LIBRARIES( main ucom)
+TARGET_LINK_LIBRARIES( main ucom pthread)

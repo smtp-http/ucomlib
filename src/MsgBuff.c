@@ -58,11 +58,20 @@ static inline int get_block()
 	int i;
 	
 	for(i = 0;i < MSG_BUF_LEN;i ++) {
-		if(block_status[i] == 0) 
+		if(block_status[i] == 0) {
+			block_status[i] = 1;
 			return i;
+		}
 	}
 
 	return ERR_MSG_BUF_FULL;
+}
+
+static inline void free_block(int bid)
+{
+	if (bid >= MSG_BUF_LEN)
+		return;
+	block_status[bid] = 0;
 }
 
 static inline int free_block_num()
@@ -93,7 +102,7 @@ int msg_buff_init()
 
 int msg_buff_save(const int msgId,const char *msgData,unsigned int dataLen)
 {
-	int count,block_num,i,j;
+	int count,block_num,i,j,k;
 	int ret = msg_check(msgId,dataLen);
 	if (ret != 0) {
 		return ret;
@@ -117,25 +126,26 @@ int msg_buff_save(const int msgId,const char *msgData,unsigned int dataLen)
 	for(i = 0;i < count;i ++) {
 		mu->block_rationing[i] = get_block();
 		if(mu->block_rationing[i] < 0) {
+			for(k = 0;k < i;k ++){
+				free_block(mu->block_rationing[k]);
+			}
 			EXIT_CRITICAL();
 			return mu->block_rationing[i];
 		}
 	}
 
 	//////////////// preemptive blocks /////////////////////
-	for(i = 0;i < count;i ++) {   
-		block_status[mu->block_rationing[i]] = 1;
-	}
 
 	mu->msg_id = msgId;
 	mu->timer_count = 0;
+	mu->data_len = dataLen;
 	
 	EXIT_CRITICAL();
 
 	///////////////// data capy ////////////////////////////
 	for( i = 0;i < count;i ++) {
 		for(j = 0;j < BLOCK_SIZE;j ++) {
-			if(i * BLOCK_SIZE + j + 1 >= dataLen)
+			if(i * BLOCK_SIZE + j >= dataLen)
 				break;
 			msg_buff[i][j] = msgData[i * BLOCK_SIZE + j];
 		}
@@ -158,10 +168,12 @@ int msg_buf_get(const int msgId,char *msgData,unsigned int* pDataLen)
 	for(i = 0;i < count;i ++) {
 		for(j = 0;j < BLOCK_SIZE;j ++) {
 			msgData[i * BLOCK_SIZE + j] = msg_buff[i][j];
-			if(i * BLOCK_SIZE + j + 1 >= mu->data_len)
+			if(i * BLOCK_SIZE + j >= mu->data_len)
 				break;
 		}
 	}
+
+	*pDataLen = mu->data_len;
 
 	ENTER_CRITICAL();
 	for(i = 0;i < count;i ++) {

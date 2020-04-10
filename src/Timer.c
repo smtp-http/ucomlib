@@ -4,7 +4,7 @@
 
 int OnTimer()
 {
-	g_msg_mmu.ev_handler(EV_TIMEOUT,10);
+	g_msg_mmu.timing_processing();
 }
 
 
